@@ -1,8 +1,10 @@
+// includes
 #include <TimeLib.h>
 #include <Wire.h>
 #include <TinyGPSPlus.h>
 #include <NeoSWSerial.h>
 #include "grove_alphanumeric_display.h"
+
 NeoSWSerial ss(2, 3);
 TinyGPSPlus gps;
 Seeed_Digital_Tube digits1through4;
@@ -14,11 +16,12 @@ void setup() {
   digits1through4.setTubeType(TYPE_4, 0x71);
   digits1through4.setBrightness(15);
   digits1through4.setBlinkRate(BLINK_OFF);
-  digits1through4.fulDisplay();
+  //digits1through4.fulDisplay();
   digits5through8.setTubeType(TYPE_4, 0x75);
   digits5through8.setBrightness(15);
   digits5through8.setBlinkRate(BLINK_OFF);
-  digits5through8.fulDisplay();
+  digits5through8.setPoint(true, true);
+  //digits5through8.fulDisplay();
   ss.begin(9600);
 }
 
@@ -54,11 +57,15 @@ void loop() {
   }
 }
 
-void digitalClockDisplay() {
+void digitalClockDisplay() {  
+  uint8_t lightSensorValue = map(analogRead(A0), 0, 800, 0, 17);
+  digits1through4.setBrightness(lightSensorValue);
+  digits5through8.setBrightness(lightSensorValue);
+
   int h = hour();
-  if (h > 10){
+  if (h > 10) {
     digits1through4.setTubeSingleNum(THIRD_TUBE, h / 10);
-  } else{
+  } else {
     digits1through4.setTubeSingleNum(THIRD_TUBE, 0);
   }
   digits1through4.setTubeSingleNum(FOURTH_TUBE, h % 10);
@@ -66,14 +73,14 @@ void digitalClockDisplay() {
   int m = minute();
   if (m > 10) {
     digits5through8.setTubeSingleNum(FIRST_TUBE, m / 10);
-  } else{
-    digits5through8.setTubeSingleChar(FIRST_TUBE, 0);
+  } else {
+    digits5through8.setTubeSingleNum(FIRST_TUBE, 0);
   }
   digits5through8.setTubeSingleNum(SECOND_TUBE, m % 10);
   int s = second();
-  if (s > 10){
+  if (s > 10) {
     digits5through8.setTubeSingleNum(THIRD_TUBE, s / 10);
-  } else{
+  } else {
     digits5through8.setTubeSingleNum(THIRD_TUBE, 0);
   }
   digits5through8.setTubeSingleNum(FOURTH_TUBE, s % 10);
