@@ -63,7 +63,7 @@ void digitalClockDisplay() {
   digits5through8.setBrightness(lightSensorValue);
 
   int h = hour();
-  if (h > 10) {
+  if (h >= 10) {
     digits1through4.setTubeSingleNum(THIRD_TUBE, h / 10);
   } else {
     digits1through4.setTubeSingleNum(THIRD_TUBE, 0);
@@ -71,14 +71,14 @@ void digitalClockDisplay() {
   digits1through4.setTubeSingleNum(FOURTH_TUBE, h % 10);
 
   int m = minute();
-  if (m > 10) {
+  if (m >= 10) {
     digits5through8.setTubeSingleNum(FIRST_TUBE, m / 10);
   } else {
     digits5through8.setTubeSingleNum(FIRST_TUBE, 0);
   }
   digits5through8.setTubeSingleNum(SECOND_TUBE, m % 10);
   int s = second();
-  if (s > 10) {
+  if (s >= 10) {
     digits5through8.setTubeSingleNum(THIRD_TUBE, s / 10);
   } else {
     digits5through8.setTubeSingleNum(THIRD_TUBE, 0);
